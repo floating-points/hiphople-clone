@@ -1,21 +1,5 @@
 .logo {
-    display: flex;
-    position: relative;
-    margin-top: 2rem;
-    align-items: center;
+    text-align: center;
 }
 
-.top {
-    display: flex;
-    .login {
-        position: absolute;
-        margin-top: 1rem;
-        text-align: center;
-    }
-    .sns {
-        z-index: 300;
-        position: absolute;
-        display : flex;
 
-    }
-}

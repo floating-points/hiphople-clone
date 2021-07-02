@@ -1,14 +1,21 @@
 import React from "react";
-import "../styles/header.scss";
-import Sns from "./Sns";
 import Login from "./Login";
 import Logo from "./Logo";
+import Sns from "./Sns";
+
+import "../styles/header.scss";
 
 const Header = () => {
     return (
-        <div className="header" >
-            <Logo />
-        </div >
+        <div>
+            <div className="top">
+                <Sns />
+                <Login />
+            </div>
+            <div className="header" >
+                <Logo />
+            </div >
+        </div>
     )
 }
 export default Header;

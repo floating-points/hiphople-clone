@@ -1,13 +1,11 @@
 .header {
-    margin-top : 1rem;
-    margin-left: 2rem;
-    position: relative;
 
-    .logo.top {
-        //position: absolute;
-        //display : flex;
-        //justify-content: space-between;
-        //align-items: center;
-    }
 
+}
+
+.top {
+    margin-top: 1.5rem;
+    display : flex;
+    justify-content: space-between;
+    align-items: center;
 }
