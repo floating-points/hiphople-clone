@@ -2,8 +2,10 @@ import React from "react";
 import Login from "./Login";
 import Logo from "./Logo";
 import Sns from "./Sns";
+import Gnb from "./Gnb";
 
 import "../styles/header.scss";
+
 
 const Header = () => {
     return (
@@ -15,6 +17,8 @@ const Header = () => {
             <div className="header" >
                 <Logo />
             </div >
+
+            <Gnb />
         </div>
     )
 }
