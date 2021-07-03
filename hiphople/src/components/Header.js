@@ -6,7 +6,6 @@ import Gnb from "./Gnb";
 
 import "../styles/header.scss";
 
-
 const Header = () => {
     return (
         <div>
