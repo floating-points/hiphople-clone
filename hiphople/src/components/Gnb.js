@@ -39,12 +39,12 @@ const menus = [
 const Gnb = () => {
 	return (
 		<div className="gnb">
-			<Route path="boardName" component={Component} />
-			<Route path="boardName" component={Component} />
-			<Route path="boardName" component={Component} />
-			<Route path="boardName" component={Component} />
-			<Route path="boardName" component={Component} />
-			<Route path="boardName" component={Component} />
+			<Route path="boardName" />
+			<Route path="boardName"/>
+			<Route path="boardName"/>
+			<Route path="boardName" />
+			<Route path="boardName"  />
+			<Route path="boardName"  />
 			{menus.map((menu) => (
 				<Link className="gnb_menu" to={menu.boardName}>
 					{menu.text}
