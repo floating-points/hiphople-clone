@@ -1,0 +1,33 @@
+
+.slider {
+	padding-top: 20px;
+	position: relative;
+	width: 720px;
+	margin: 0 auto;
+
+}
+
+.container {
+	width: 720px;
+	height: 400px;
+	overflow: hidden;
+}
+
+.slide {
+	position: relative;
+	display: flex;
+	height: 400px;
+	transition: transform 0.5s;
+}
+
+.prev_button {
+	position: absolute;
+	top: 45%;
+	left: 0;
+}
+
+.next_button {
+	position: absolute;
+	top: 45%;
+	right: 0;
+}
