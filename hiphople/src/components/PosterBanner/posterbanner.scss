@@ -1,0 +1,29 @@
+.posterbanner_title {
+	position: relative;
+	text-align: center;
+	font-size: 1.5rem;
+	color: #1a1a1a;
+	margin-top: 90px;
+	margin-bottom: 0px;
+	padding-bottom: 10px;
+
+	::after {
+		position: absolute;
+		left: calc(50% - 25px);
+		width: 50px;
+		height: 1px;
+		content: "";
+		background: #FF2E2E;
+		bottom: 0;
+	}
+}
+.poster_banner {
+	width: 100%;
+	margin-top: 20px;
+	margin-left: 10px;
+	display: flex;
+	.poster {
+		padding: 7px;
+		width: 20%;
+	}
+}
