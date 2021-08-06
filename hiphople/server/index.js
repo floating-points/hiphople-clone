@@ -11,9 +11,13 @@ app.use(express.json());
 const PORT=8000;
 
 //app.use("/api",api);
-//app.use("/", express.static(__dirname+"/client/build"));
+app.use(express.static(__dirname+"/client/build"));
 
-const conn=mysql.createConnection({
+app.use("/", (res,req)=>{
+    res.sendFile(__dirname+"/client/build/index.html");
+});
+
+/*const conn=mysql.createConnection({
     host:'localhost',
     user:'witch',
     password:'witch',
@@ -23,22 +27,23 @@ const conn=mysql.createConnection({
 conn.connect((err)=>{
     if(err){throw err;}
     console.log("테이블 생성 쿼리 실행");
-    const sqlQuery="create table post(" +
-        "id int not null auto_increment primary key," +
-        "title nvarchar(100) not null," +
-        "content text(5000) not null," +
-        "writer int not null," +
-        "timerecord datetime not null" +
-        ");";
-    conn.query(sqlQuery, (err,result)=>{
-        if(err){throw err ;}
-        console.log("table created");
-    })
+})
+
+const sqlQuery="insert into post(id, title, content, writer, timerecord) " +
+    "values(4, 'test title2', 'test content2', 5, now())";
+
+conn.query(sqlQuery, (err,result, fields)=>{
+    if(err){throw err;}
+    console.log(result);
 })
 
 app.get("/", (req,res)=>{
-    res.send("Hello");
-});
+    const sqlQuery="select * from post";
+    conn.query(sqlQuery, (err,result, fields)=>{
+        if(err){throw err;}
+        res.send(result);
+    })
+});*/
 
 app.listen(PORT, ()=>{
     console.log("example app running on port", PORT);
