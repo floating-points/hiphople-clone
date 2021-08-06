@@ -11,9 +11,9 @@ app.use(express.json());
 const PORT=8000;
 
 //app.use("/api",api);
-//app.use("/", express.static(__dirname+"../../client/build"));
+app.use("/", express.static(__dirname+"/client/build"));
 
-const conn=mysql.createConnection({
+/*const conn=mysql.createConnection({
     host:'localhost',
     user:'witch',
     password:'witch'
@@ -26,8 +26,9 @@ conn.connect((err)=>{
 
 app.get("/", (req,res)=>{
     res.send("Hello");
-})
+})*/
 
 app.listen(PORT, ()=>{
     console.log("example app running on port", PORT);
+    console.log(__dirname);
 })
