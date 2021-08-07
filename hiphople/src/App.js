@@ -1,17 +1,15 @@
 import './App.css';
-import Header from "./components/Header/Header";
-import PosterBanner from './components/PosterBanner/PosterBanner';
-import Swiper from "./components/Swiper/Swiper";
-import Footer from './components/Footer/Footer';
+import { Route, Link } from "react-router-dom";
+import Mainpage from './components/Mainpage/Mainpage';
+import DomesticBoard from './components/DomesticBoard/DomesticBoard';
 
 function App() {
   return (
     <div>
-      <Header />
-      <Swiper />
-      <PosterBanner />
 
-      <Footer />
+      <Route path="/" exact component={Mainpage} />
+      <Route path="/DomesticBoard" component={DomesticBoard} />
+
     </div>
   );
 }
