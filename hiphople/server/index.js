@@ -1,21 +1,17 @@
-import express from "express"
-import api from "./routes/api.js"
+import express from "express";
+import api from "./routes/api.js";
 import path from "path";
 import bodyParser from "body-parser";
-import mysql from 'mysql';
+import mysql from "mysql";
 
 const __dirname=path.resolve();
+const PORT=8000;
+
 const app=express();
 app.use(express.json());
 
-const PORT=8000;
-
-//app.use("/api",api);
-app.use(express.static(__dirname+"/client/build"));
-
-app.use("/", (res,req)=>{
-    res.sendFile(__dirname+"/client/build/index.html");
-});
+app.use("/api",api);
+app.use("/", express.static(__dirname+"/client/build"));
 
 /*const conn=mysql.createConnection({
     host:'localhost',
@@ -47,4 +43,5 @@ app.get("/", (req,res)=>{
 
 app.listen(PORT, ()=>{
     console.log("example app running on port", PORT);
+    console.log(__dirname);
 });

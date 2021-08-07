@@ -5,7 +5,7 @@ import fashion from "./fashion.js";
 import work from "./work.js";
 import mix from "./mix.js";
 import album from "./album.js";
-import board from "./board.js"
+import board from "./board.js";
 
 const router=express.Router();
 
