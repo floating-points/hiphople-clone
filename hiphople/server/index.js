@@ -3,6 +3,7 @@ import api from "./routes/api.js";
 import path from "path";
 import bodyParser from "body-parser";
 import mysql from "mysql";
+import ejs from "ejs";
 
 const __dirname=path.resolve();
 const PORT=8000;
