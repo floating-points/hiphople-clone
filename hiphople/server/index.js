@@ -8,7 +8,7 @@ const __dirname=path.resolve();
 const PORT=8000;
 
 const app=express();
-
+app.use(bodyParser.urlencoded({extended:true}));
 //app.use("/api",api);
 //app.use("/", express.static(__dirname+"/client/build"));
 
@@ -52,12 +52,21 @@ conn.query(insertQuery, (err, result, fields)=>{
 });*/
 
 app.get("/", (req,res)=>{
-    const sqlQuery="select * from posts";
-    conn.query(sqlQuery, (err, result, fields)=>{
+    res.sendFile(path.join(__dirname, "server/form.html"));
+});
+
+app.post("/", (req,res)=>{
+    const newPostQuery="insert into posts set ?";
+
+    req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
+    //datetime for mysql
+    conn.query(newPostQuery, req.body, (err,result,fields)=>{
         if(err){throw err;}
-        res.send(result);
+        console.log(result);
+        res.send("등록 완료");
     });
 });
+
 
 app.listen(PORT, ()=>{
     console.log("example app running on port", PORT);
