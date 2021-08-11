@@ -44,7 +44,7 @@ conn.query(tableQuery, (err, result)=>{
     console.log("게시글 테이블 생성 완료");
 });*/
 
-const commentsTableQuery="create table comments" +
+/*const commentsTableQuery="create table comments" +
     "(id int not null primary key auto_increment," +
     "post int not null," +
     "content text(1000)," +
@@ -54,7 +54,7 @@ const commentsTableQuery="create table comments" +
 conn.query(commentsTableQuery, (err, result)=>{
     if(err){throw err;}
     console.log("테이블 생성 완료");
-});
+});*/
 
 // 데이터 하나 추가하는 코드
 /*const insertQuery="insert into posts(id, title, content, writer, timerecord) values(1, \"테스트 제목3\", \"테스트 내용3\", 2, NOW())";
@@ -68,7 +68,28 @@ app.get("/", (req,res)=>{
     res.sendFile(path.join(__dirname, "server/form.html"));
 });*/
 
+const commentFilteredByPost=(postID)=>{
+    app.post("/", (req,res)=>{
+       const filterQuery="select * from comments where post=?";
+       conn.query(filterQuery, postID, (err,result,fields)=>{
+           if(err){throw err;}
+           console.log(result);
+           res.send(postID+"번 글에 달린 댓글");
+       });
+    });
+};
+
 app.post("/", (req,res)=>{
+    const filterQuery="select * from comments where post=?";
+    const {postID}=req.body;
+    conn.query(filterQuery, postID, (err,result,fields)=>{
+        if(err){throw err;}
+        console.log(result);
+        res.send(postID+"번 글에 달린 댓글");
+    });
+});
+
+app.post("/postinsert", (req,res)=>{
     const newPostQuery="insert into posts set ?";
 
     req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
