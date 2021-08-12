@@ -13,20 +13,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use("/api",api);
 //app.use("/", express.static(__dirname+"/client/build"));
 
-/*const conn=mysql.createPool({
-    host:"localhost",
-    user:"witch",
-    password:"witch",
-    database:"domestic"
-});*/
-
-/*conn.connect((err)=>{
-    if(err){throw err;}
-    console.log("DB 연결 완료");
-});*/
-
 /* DB 생성 코드
-conn.query("create database domestic character set utf8", (err, result)=>{
+connection.query("create database domestic character set utf8", (err, result)=>{
     if(err){throw err;}
     console.log("국내 게시판 DB 생성 완료");
 });*/
@@ -39,7 +27,7 @@ const postsTableQuery="create table posts" +
   "writer int not null," +
   "timerecord datetime not null);";
 
-conn.query(tableQuery, (err, result)=>{
+connection.query(tableQuery, (err, result)=>{
     if(err){throw err;}
     console.log("게시글 테이블 생성 완료");
 });*/
@@ -51,15 +39,15 @@ conn.query(tableQuery, (err, result)=>{
     "writer int not null," +
     "timerecord datetime not null);";
 
-conn.query(commentsTableQuery, (err, result)=>{
+connection.query(commentsTableQuery, (err, result)=>{
     if(err){throw err;}
     console.log("테이블 생성 완료");
 });*/
 
-// 데이터 하나 추가하는 코드
+// 글 db에 데이터 하나 추가하는 코드
 /*const insertQuery="insert into posts(id, title, content, writer, timerecord) values(1, \"테스트 제목3\", \"테스트 내용3\", 2, NOW())";
 
-conn.query(insertQuery, (err, result, fields)=>{
+connection.query(insertQuery, (err, result, fields)=>{
     if(err){throw err;}
     console.log(result);
 });
@@ -75,10 +63,15 @@ const commentFilteredByPost=async (postID)=>{
     return result[0];
 };
 
-const commentUpdate=async(commentID, newContent)=>{
+const commentUpdate=async (commentID, newContent)=>{
     const commentUpdateQuery="update comments set content=? where id=?";
     const result=await connection.query(commentUpdateQuery, [newContent, commentID]);
-    console.log(result[0]);
+    console.log("댓글 수정 완료");
+};
+
+const commentInsert=async(postID, writer, content)=>{
+    const commentInsertQuery="insert into comments(post, writer, content, timerecord) values(?,?,?,?)";
+    
 };
 
 app.post("/comment-search", async (req,res)=>{
@@ -103,16 +96,12 @@ app.post("/post-insert", (req,res)=>{
     });
 });
 
-app.post("/comment-insert", (req,res)=>{
+app.post("/comment-insert", async (req,res)=>{
     const newCommentQuery="insert into comments set ?";
 
     req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
     //datetime for mysql
-    connection.query(newCommentQuery, req.body, (err,result,fields)=>{
-        if(err){throw err;}
-        console.log(result);
-        res.send("댓글 등록 완료");
-    });
+    connection.query(newCommentQuery, req.body);
 });
 
 app.get("/", async (req, res)=>{
