@@ -75,12 +75,23 @@ const commentFilteredByPost=async (postID)=>{
     return result[0];
 };
 
-app.post("/comment", async (req,res)=>{
+const commentUpdate=async(commentID, newContent)=>{
+    const commentUpdateQuery="update comments set content=? where id=?";
+    const result=await connection.query(commentUpdateQuery, [newContent, commentID]);
+    console.log(result[0]);
+};
+
+app.post("/comment-search", async (req,res)=>{
     const {postID}=req.body;
     res.send(await commentFilteredByPost(postID));
 });
 
-app.post("/postinsert", (req,res)=>{
+app.post("/comment-update", async (req,res)=>{
+    const {commentID, newContent}=req.body;
+    res.send(await commentUpdate(commentID, newContent));
+});
+
+app.post("/post-insert", (req,res)=>{
     const newPostQuery="insert into posts set ?";
 
     req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -92,7 +103,7 @@ app.post("/postinsert", (req,res)=>{
     });
 });
 
-app.post("/commentinsert", (req,res)=>{
+app.post("/comment-insert", (req,res)=>{
     const newCommentQuery="insert into comments set ?";
 
     req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
