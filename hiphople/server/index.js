@@ -3,6 +3,7 @@ import api from "./routes/api.js";
 import path from "path";
 import bodyParser from "body-parser";
 import mysql from "mysql2/promise";
+import connection from "./mysql/mysql_connection.js";
 
 const __dirname=path.resolve();
 const PORT=8000;
@@ -12,12 +13,12 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use("/api",api);
 //app.use("/", express.static(__dirname+"/client/build"));
 
-const conn=mysql.createPool({
+/*const conn=mysql.createPool({
     host:"localhost",
     user:"witch",
     password:"witch",
     database:"domestic"
-});
+});*/
 
 /*conn.connect((err)=>{
     if(err){throw err;}
@@ -69,7 +70,7 @@ app.get("/", (req,res)=>{
 
 const commentFilteredByPost=async (postID)=>{
     const commentFilterQuery="select * from comments where post=?";
-    const result=await conn.query(commentFilterQuery, postID);
+    const result=await connection.query(commentFilterQuery, postID);
     console.log(result[0]);
     return result[0];
 };
@@ -84,7 +85,7 @@ app.post("/postinsert", (req,res)=>{
 
     req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
     //datetime for mysql
-    conn.query(newPostQuery, req.body, (err,result,fields)=>{
+    connection.query(newPostQuery, req.body, (err,result,fields)=>{
         if(err){throw err;}
         console.log(result);
         res.send("등록 완료");
@@ -96,7 +97,7 @@ app.post("/commentinsert", (req,res)=>{
 
     req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
     //datetime for mysql
-    conn.query(newCommentQuery, req.body, (err,result,fields)=>{
+    connection.query(newCommentQuery, req.body, (err,result,fields)=>{
         if(err){throw err;}
         console.log(result);
         res.send("댓글 등록 완료");
