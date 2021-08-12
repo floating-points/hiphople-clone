@@ -2,28 +2,27 @@ import express from "express";
 import api from "./routes/api.js";
 import path from "path";
 import bodyParser from "body-parser";
-import mysql from "mysql";
-import ejs from "ejs";
+import mysql from "mysql2/promise";
 
 const __dirname=path.resolve();
 const PORT=8000;
 
 const app=express();
 app.use(bodyParser.urlencoded({extended:true}));
-//app.use("/api",api);
+app.use("/api",api);
 //app.use("/", express.static(__dirname+"/client/build"));
 
-const conn=mysql.createConnection({
+const conn=mysql.createPool({
     host:"localhost",
     user:"witch",
     password:"witch",
     database:"domestic"
 });
 
-conn.connect((err)=>{
+/*conn.connect((err)=>{
     if(err){throw err;}
     console.log("DB 연결 완료");
-});
+});*/
 
 /* DB 생성 코드
 conn.query("create database domestic character set utf8", (err, result)=>{
@@ -68,25 +67,16 @@ app.get("/", (req,res)=>{
     res.sendFile(path.join(__dirname, "server/form.html"));
 });*/
 
-const commentFilteredByPost=(postID)=>{
-    app.post("/", (req,res)=>{
-       const filterQuery="select * from comments where post=?";
-       conn.query(filterQuery, postID, (err,result,fields)=>{
-           if(err){throw err;}
-           console.log(result);
-           res.send(postID+"번 글에 달린 댓글");
-       });
-    });
+const commentFilteredByPost=async (postID)=>{
+    const commentFilterQuery="select * from comments where post=?";
+    const result=await conn.query(commentFilterQuery, postID);
+    console.log(result[0]);
+    return result[0];
 };
 
-app.post("/", (req,res)=>{
-    const filterQuery="select * from comments where post=?";
+app.post("/comment", async (req,res)=>{
     const {postID}=req.body;
-    conn.query(filterQuery, postID, (err,result,fields)=>{
-        if(err){throw err;}
-        console.log(result);
-        res.send(postID+"번 글에 달린 댓글");
-    });
+    res.send(await commentFilteredByPost(postID));
 });
 
 app.post("/postinsert", (req,res)=>{
@@ -99,6 +89,22 @@ app.post("/postinsert", (req,res)=>{
         console.log(result);
         res.send("등록 완료");
     });
+});
+
+app.post("/commentinsert", (req,res)=>{
+    const newCommentQuery="insert into comments set ?";
+
+    req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
+    //datetime for mysql
+    conn.query(newCommentQuery, req.body, (err,result,fields)=>{
+        if(err){throw err;}
+        console.log(result);
+        res.send("댓글 등록 완료");
+    });
+});
+
+app.get("/", async (req, res)=>{
+   res.send("시작 페이지");
 });
 
 app.listen(PORT, ()=>{

@@ -9,15 +9,17 @@ import board from "./board.js";
 
 const router=express.Router();
 
-router.use("/:board", (req,res)=>{
-    res.send(req.params.board);
-});
-/*
 router.use("/domestic", domestic);
 router.use("/global", global);
 router.use("/fashion", fashion);
 router.use("/work", work);
 router.use("/mix", mix);
-router.use("/album", album);*/
+router.use("/album", album);
+
+router.use("/:board",(req,res)=>{
+    res.send(req.params.board);
+});
+
+
 
 export default router;
