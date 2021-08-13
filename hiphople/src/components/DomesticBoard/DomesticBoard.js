@@ -1,178 +1,149 @@
-import React from "react";
+import React, { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import BoardGnb from "./BoardGnb";
-
+import BoardGnb from "./BoardGnb/BoardGnb";
+import BoardCategory from "./BoardCategory/BoardCategory";
+import BoardItem from "./BoardItem/BoardItem";
+import Footer from "../Mainpage/Footer/Footer";
 const DomesticBoardContainer = styled.div`
-
 `
+
 const Board = styled.div`
 	display: block;
 	margin-top: 150px;
 	padding-left: 150px;
 	padding-right: 200px;
 `
-const BoardTitle = styled.div`
+const Title = styled.div`
 	font-size: 24px;
 	font-weight: bold;
 `
 
-const BoardCategoryContainer = styled.ul`
-	position: relative;
-	margin-bottom: 0.5rem;;
-	margin-top: 0.5rem;
-`
-
-const BoardCategory = styled.li`
-	margin-right: 2rem;
-	line-height: 1.5;
-	font-size: 0.9rem;
-	display: inline-block;
-	position: relative;
-	border: 1px solid #ccc;
-	text-align: center;
-`
-
-const BoardTableContainer = styled.table`
+const TableContainer = styled.table`
 	margin-top: 30px;
 	width: 100%;
 `
 
-const BoardTableHeader = styled.th`
+const TableHeader = styled.th`
 	text-align: center;
 	font-weight: bold;
 	line-height: 1.75em;
 `
 
-const BoardTableHeaderTitle = styled.th`
+const TableHeaderTitle = styled.th`
 	text-align: center;
 	font-weight: bold;
 	min-width: 100px;
 	line-height: 1.75em;
 `
 
-const BoardTableBody = styled.tbody`
+const TableBody = styled.tbody`
 
 `
-const BoardTablePost = styled.tr`
-
-	text-align: center;
-	line-height: 1.75em;
-`
-const categories = [
-	{
-		type: "all",
-		text: "전체",
-		selected: true
-	},
-	{
-		type: "music",
-		text: "음악",
-		selected: false
-	},{
-		type: "review",
-		text: "리뷰",
-		selected: false
-	},{
-		type: "notice",
-		text: "공지",
-		selected: false
-	},
-	{
-		type: "general",
-		text: "일반",
-		selected: false
-	},
-]
-
-const tableHeader = [
-	"번호",
-	"카테고리",
-	"제목",
-	"글쓴이",
-	"날짜"
-];
 
 const posts = [
 	{
 		id: 1,
 		type: "general",
-		title: "민트초코 조아요",
+		title: "일반 타입 게시글 입니다",
 		author: "ho",
 		date : "123"
 	},
 	{
 		id: 2,
-		type: "general",
-		title: "민트초코 조아요",
+		type: "music",
+		title: "음악 타입 게시글 입니다",
 		author: "ho",
 		date : "123"
 	},{
 		id: 3,
-		type: "general",
-		title: "민트초코 조아요",
+		type: "review",
+		title: "리뷰 타입 게시글 입니다",
 		author: "ho",
 		date : "123"
-	},{
+	},
+	{
 		id: 4,
+		type: "notice",
+		title: "공지 타입 게시글 입니다",
+		author: "ho",
+		date : "123"
+	},
+	{
+		id: 5,
+		type: "all",
+		title: "전체 타입 게시글 입니다",
+		author: "ho",
+		date : "123"
+	},
+	{
+		id: 6,
 		type: "general",
-		title: "민트초코 조아요",
+		title: "일반 타입 게시글 입니다",
 		author: "ho",
 		date : "123"
 	},
 ]
+
+
 const DomesticBoard = () => {
-	const TITLE = "국내 게시판"
+	const TITLE = "국내 게시판";
+	const ALL = "all";
+	const [currentType,setCurrentType] = useState("all");
+
+	const onCategoryClick = useCallback(((type) => {
+		setCurrentType(() => type);
+	}), [currentType]);
+
 
 	return (
 		<DomesticBoardContainer>
+
+			{/* 게시판 Gnb */}
 			<BoardGnb />
 
 			<Board>
-				<BoardTitle>
+				{/* 게시판 타이틀 */}
+				<Title>
 					{TITLE}
-				</BoardTitle>
+				</Title>
 
-				<BoardCategoryContainer>
-					{categories.map((category) => (
-						<BoardCategory>
-							{category.text}
-						</BoardCategory>
-					))}
-				</BoardCategoryContainer>
+				{/* 게시판 카테고리 */}
+				<BoardCategory
+					currentType={currentType}
+				 	onCategoryClick={onCategoryClick}
+				/>
 
-				<BoardTableContainer>
-
+				{/* 게시글 */}
+				<TableContainer>
+					{/* 게시글 헤더 */}
 					<thead>
-						<BoardTableHeader scope="col">번호</BoardTableHeader>
-						<BoardTableHeader scope="col">카테고리</BoardTableHeader>
-						<BoardTableHeaderTitle scope="col">제목</BoardTableHeaderTitle>
-						<BoardTableHeader scope="col">글쓴이</BoardTableHeader>
-						<BoardTableHeader scope="col">날짜</BoardTableHeader>
+						<TableHeader scope="col">번호</TableHeader>
+						<TableHeader scope="col">카테고리</TableHeader>
+						<TableHeaderTitle scope="col">제목</TableHeaderTitle>
+						<TableHeader scope="col">글쓴이</TableHeader>
+						<TableHeader scope="col">날짜</TableHeader>
 					</thead>
 
-					<BoardTableBody>
-						{posts.map((post => (
-							<BoardTablePost>
-								<td>{post.id}</td>
-								<td>{post.type}</td>
-								<td>{post.title}</td>
-								<td>{post.author}</td>
-								<td>{post.date}</td>
-							</BoardTablePost>
-						)))}
-					</BoardTableBody>
-					{/*
-					<thead>
-						{tableHeader.map((text) => (
-							<BoardTableHeader>
-								<span>{text}</span>
-							</BoardTableHeader>
-						))}
-					</thead>
-
-						*/}
-				</BoardTableContainer>
+					{/* 게시글 내용 */}
+					<TableBody>
+						{
+							posts.map((post) => (
+								currentType === ALL ?
+								<BoardItem
+								post={post} />
+							:
+								currentType === post.type ?
+								<BoardItem
+								post={post} />
+								:
+								""
+							))
+						}
+					</TableBody>
+				</TableContainer>
 			</Board>
+			<Footer />
 		</DomesticBoardContainer>
 	)
 }
