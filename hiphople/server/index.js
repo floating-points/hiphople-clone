@@ -71,7 +71,9 @@ const commentUpdate=async (commentID, newContent)=>{
 
 const commentInsert=async(postID, writer, content)=>{
     const commentInsertQuery="insert into comments(post, writer, content, timerecord) values(?,?,?,?)";
-    
+    const currentTime=new Date().toISOString().slice(0, 19).replace("T", " ");
+    const result=await connection.query(commentInsertQuery, [postID, writer, content, currentTime]);
+    console.log("댓글 삽입 완료");
 };
 
 app.post("/comment-search", async (req,res)=>{
@@ -84,24 +86,10 @@ app.post("/comment-update", async (req,res)=>{
     res.send(await commentUpdate(commentID, newContent));
 });
 
-app.post("/post-insert", (req,res)=>{
-    const newPostQuery="insert into posts set ?";
-
-    req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
-    //datetime for mysql
-    connection.query(newPostQuery, req.body, (err,result,fields)=>{
-        if(err){throw err;}
-        console.log(result);
-        res.send("등록 완료");
-    });
-});
-
 app.post("/comment-insert", async (req,res)=>{
-    const newCommentQuery="insert into comments set ?";
-
-    req.body.timerecord=new Date().toISOString().slice(0, 19).replace("T", " ");
+    const {postID, writer, content}=req.body;
     //datetime for mysql
-    connection.query(newCommentQuery, req.body);
+    res.send(await commentInsert(postID, writer, content));
 });
 
 app.get("/", async (req, res)=>{
