@@ -51,6 +51,7 @@ app.get("/", (req,res)=>{
     res.sendFile(path.join(__dirname, "server/form.html"));
 });*/
 
+//댓글 쿼리 날리는 함수 api
 const boardCommentFilteredByPost=async (boardName, postID)=>{
     const commentFilterQuery="select * from "+boardName+" where post=?";
     const result=await connection.query(commentFilterQuery, [postID]);
@@ -60,17 +61,18 @@ const boardCommentFilteredByPost=async (boardName, postID)=>{
 
 const boardCommentUpdate=async (boardName, commentID, newContent)=>{
     const commentUpdateQuery="update "+boardName+" set content=? where id=?";
-    const result=await connection.query(commentUpdateQuery, [newContent, commentID]);
+    await connection.query(commentUpdateQuery, [newContent, commentID]);
     console.log("댓글 수정 완료");
 };
 
 const boardCommentInsert=async(boardName, postID, writer, content)=>{
     const commentInsertQuery="insert into "+boardName+"(post, writer, content, timerecord) values(?,?,?,?)";
     const currentTime=new Date().toISOString().slice(0, 19).replace("T", " ");
-    const result=await connection.query(commentInsertQuery, [postID, writer, content, currentTime]);
+    await connection.query(commentInsertQuery, [postID, writer, content, currentTime]);
     console.log("댓글 삽입 완료");
 };
 
+//postman으로 쿼리 날리기 시험용 페이지들
 app.post("/comment-search", async (req,res)=>{
     const {boardName, postID}=req.body;
     res.send(await boardCommentFilteredByPost(boardName, postID));
@@ -86,6 +88,7 @@ app.post("/comment-insert", async (req,res)=>{
     //datetime for mysql
     res.send(await boardCommentInsert(boardName, postID, writer, content));
 });
+///////////////////
 
 app.get("/", async (req, res)=>{
    res.send("시작 페이지");
