@@ -1,16 +1,18 @@
 import React, { useCallback, useState } from "react";
-import { useSelector } from "react-redux";
 import styled from "styled-components";
 import BoardGnb from "./BoardGnb/BoardGnb";
 import BoardCategory from "./BoardCategory/BoardCategory";
 import BoardItem from "./BoardItem/BoardItem";
+import PostSearch from "./PostSearch/PostSearch";
+import Pagination from "./Pagination/Pagination";
 import Footer from "../Mainpage/Footer/Footer";
+
 const DomesticBoardContainer = styled.div`
 `
 
 const Board = styled.div`
 	display: block;
-	margin-top: 150px;
+	margin-top: 120px;
 	padding-left: 150px;
 	padding-right: 200px;
 `
@@ -89,7 +91,8 @@ const posts = [
 const DomesticBoard = () => {
 	const TITLE = "국내 게시판";
 	const ALL = "all";
-	const [currentType,setCurrentType] = useState("all");
+	const [currentType, setCurrentType] = useState("all");
+	const [currentPage, setCurrentPage] = useState(1);
 
 	const onCategoryClick = useCallback(((type) => {
 		setCurrentType(() => type);
@@ -142,7 +145,13 @@ const DomesticBoard = () => {
 						}
 					</TableBody>
 				</TableContainer>
+				<PostSearch />
+				<Pagination
+					currentPage={currentPage}
+					setCurrentPage={setCurrentPage}
+					/>
 			</Board>
+
 			<Footer />
 		</DomesticBoardContainer>
 	)
