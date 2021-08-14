@@ -3,6 +3,7 @@ import api from "./routes/api.js";
 import path from "path";
 import bodyParser from "body-parser";
 import mysql from "mysql2/promise";
+import session from "express-session";
 import connection from "./mysql/mysql_connection.js";
 import {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate} from "./mysql/board_db.js";
 
@@ -11,11 +12,17 @@ const PORT=8000;
 
 const app=express();
 app.use(bodyParser.urlencoded({extended:true}));
+
+app.use(session({
+    secret:"secret",
+    resave:false,
+    saveUninitialized:true
+}));
+
 app.use("/api",api);
 //app.use("/", express.static(__dirname+"/client/build"));
 
-
-//postman으로 쿼리 날리기 시험용 페이지들
+//postman 으로 쿼리 날리기 시험용 페이지들
 app.post("/comment-search", async (req,res)=>{
     const {boardName, postID}=req.body;
     res.send(await boardCommentFilteredByPost(boardName, postID));

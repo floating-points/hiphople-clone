@@ -4,7 +4,7 @@ import connection from "./mysql_connection.js";
 //connection.query("create database board character set utf8");
 
 /*테이블 생성 코드
-const postsTableQuery="create table posts" +
+const postsTableQuery="create table domestic_posts" +
   "(id int not null primary key auto_increment," +
   "title nvarchar(100)," +
   "content text(5000)," +
@@ -40,7 +40,6 @@ app.get("/", (req,res)=>{
 
 
 //댓글 쿼리 날리는 함수들
-
 const boardCommentFilteredByPost=async (boardName, postID)=>{
   const commentFilterQuery="select * from "+boardName+" where post=?";
   const result=await connection.query(commentFilterQuery, [postID]);
