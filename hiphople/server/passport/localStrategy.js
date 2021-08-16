@@ -1,11 +1,11 @@
 import passportLocal from "passport-local";
 import userList from "./userList.js";
 
-const localStrategy=passportLocal.Strategy;
+const LocalStrategy=passportLocal.Strategy;
 
 const local=(passport)=>{
     passport.use(
-        new localStrategy(
+        new LocalStrategy(
             {
                 usernameField:"id",
                 passwordField:"pw"
