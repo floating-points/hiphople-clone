@@ -6,6 +6,7 @@ import mysql from "mysql2/promise";
 import session from "express-session";
 import connection from "./mysql/mysql_connection.js";
 import {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate} from "./mysql/board_db.js";
+import login from "./app.js";
 
 const __dirname=path.resolve();
 const PORT=8000;
@@ -20,6 +21,7 @@ app.use(session({
 }));
 
 app.use("/api",api);
+app.use("/login", login);
 //app.use("/", express.static(__dirname+"/client/build"));
 
 //postman 으로 쿼리 날리기 시험용 페이지들
