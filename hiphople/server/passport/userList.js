@@ -12,3 +12,5 @@ const userList=[
         pw:"testpw2"
     },
 ];
+
+export default userList;

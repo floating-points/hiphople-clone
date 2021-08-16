@@ -1,4 +1,5 @@
 import passportLocal from "passport-local";
+import userList from "./userList.js";
 
 const localStrategy=passportLocal.Strategy;
 
@@ -10,13 +11,19 @@ const local=(passport)=>{
                 passwordField:"pw"
             },
             (id, pw, done)=>{
-                const user={
-                    id:"test",
-                    pw:"testpw"
-                };
+                const result=userList.filter((user)=>user.id===id);
 
-                if(id===user.id && pw===user.pw){
-                    done(null, user);
+                if(result.length>0){
+                    const user=result[0];
+                    if(pw===user.pw){
+                        done(null, user);
+                    }
+                    else{
+                        done(null, false, {message:"틀린 비밀번호"});
+                    }
+                }
+                else{
+                    done(null, false, {message:"존재하지 않는 회원"});
                 }
             }
         )
