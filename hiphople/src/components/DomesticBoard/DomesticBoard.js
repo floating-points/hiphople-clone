@@ -2,10 +2,10 @@ import React, { useCallback, useState } from "react";
 import styled from "styled-components";
 import BoardGnb from "./BoardGnb/BoardGnb";
 import BoardCategory from "./BoardCategory/BoardCategory";
-import BoardItem from "./BoardItem/BoardItem";
 import PostSearch from "./PostSearch/PostSearch";
 import Pagination from "./Pagination/Pagination";
 import Footer from "../Mainpage/Footer/Footer";
+import RenderBoard from "./RenderBoard/RenderBoard";
 
 const DomesticBoardContainer = styled.div`
 `
@@ -19,24 +19,6 @@ const Board = styled.div`
 const Title = styled.div`
 	font-size: 24px;
 	font-weight: bold;
-`
-
-const TableContainer = styled.table`
-	margin-top: 30px;
-	width: 100%;
-`
-
-const TableHeader = styled.th`
-	text-align: center;
-	font-weight: bold;
-	line-height: 1.75em;
-`
-
-const TableHeaderTitle = styled.th`
-	text-align: center;
-	font-weight: bold;
-	min-width: 100px;
-	line-height: 1.75em;
 `
 
 const TableBody = styled.tbody`
@@ -117,34 +99,10 @@ const DomesticBoard = () => {
 				 	onCategoryClick={onCategoryClick}
 				/>
 
-				{/* 게시글 */}
-				<TableContainer>
-					{/* 게시글 헤더 */}
-					<thead>
-						<TableHeader scope="col">번호</TableHeader>
-						<TableHeader scope="col">카테고리</TableHeader>
-						<TableHeaderTitle scope="col">제목</TableHeaderTitle>
-						<TableHeader scope="col">글쓴이</TableHeader>
-						<TableHeader scope="col">날짜</TableHeader>
-					</thead>
-
-					{/* 게시글 내용 */}
-					<TableBody>
-						{
-							posts.map((post) => (
-								currentType === ALL ?
-								<BoardItem
-								post={post} />
-							:
-								currentType === post.type ?
-								<BoardItem
-								post={post} />
-								:
-								""
-							))
-						}
-					</TableBody>
-				</TableContainer>
+				<RenderBoard
+					post={posts}
+					currentType={currentType}
+				/>
 				<PostSearch />
 				<Pagination
 					currentPage={currentPage}
