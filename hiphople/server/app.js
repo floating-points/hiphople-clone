@@ -1,13 +1,12 @@
 import express from "express";
 import session from "express-session";
 import passport from "passport";
-import passportLocal from "passport-local";
 import passportConfig from "./passport/index.js";
 import path from "path";
 import dotenv from "dotenv";
+import flash from "connect-flash";
 
 const router=express.Router();
-const LocalStrategy=passportLocal.Strategy;
 const __dirname=path.resolve();
 
 dotenv.config();
@@ -21,15 +20,18 @@ router.use(session({
 router.use(express.urlencoded({extended:false}));
 router.use(passport.initialize());
 router.use(passport.session());
+router.use(flash());
 
 router.use("/", express.static(__dirname+"/server/loginView/index.html"));
 router.use("/success", express.static(__dirname+"/server/loginView/success.html"));
 
 passportConfig(passport);
 
-router.post("/", passport.authenticate("local"), (req, res)=>{
-    res.redirect("/login/success");
-});
+router.post("/", passport.authenticate("local",
+    { successRedirect: "/login/success",
+    failureRedirect: "/login",
+    failureFlash: "로그인 실패" })
+);
 
 
 

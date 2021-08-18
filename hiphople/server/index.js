@@ -5,7 +5,7 @@ import bodyParser from "body-parser";
 import mysql from "mysql2/promise";
 import session from "express-session";
 import connection from "./mysql/mysql_connection.js";
-import {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate} from "./mysql/board_db.js";
+import {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate, userInfoInsert} from "./mysql/board_db.js";
 import login from "./app.js";
 
 const __dirname=path.resolve();
@@ -39,6 +39,18 @@ app.post("/comment-insert", async (req,res)=>{
     const {boardName, postID, writer, content}=req.body;
     //datetime for mysql
     res.send(await boardCommentInsert(boardName, postID, writer, content));
+});
+
+app.post("/user-insert", async(req, res)=>{
+    const {username, password}=req.body;
+
+    try{
+        const result=await userInfoInsert(username, password);
+        res.send("유저 정보 삽입 성공");
+    }
+    catch(err){
+        res.send("에러 발생");
+    }
 });
 ///////////////////
 

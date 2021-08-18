@@ -1,15 +1,15 @@
 const userList=[
     {
-        id:"test",
-        pw:"testpw"
+        username:"test",
+        password:"testpw"
     },
     {
-        id:"test1",
-        pw:"testpw1"
+        username:"test1",
+        password:"testpw1"
     },
     {
-        id:"test2",
-        pw:"testpw2"
+        username:"test2",
+        password:"testpw2"
     },
 ];
 

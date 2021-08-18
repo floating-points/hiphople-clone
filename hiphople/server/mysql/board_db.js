@@ -1,4 +1,5 @@
 import connection from "./mysql_connection.js";
+import conn from "./mysql_connection.js";
 
 //DB 생성 코드
 //connection.query("create database board character set utf8");
@@ -38,26 +39,38 @@ app.get("/", (req,res)=>{
     res.sendFile(path.join(__dirname, "server/form.html"));
 });*/
 
+/*const userTableQuery="create table users"+
+    "(id int not null primary key auto_increment,"+
+    "username nvarchar(20) not null unique,"+
+    "password nvarchar(20) not null);";
+
+connection.query(userTableQuery);*/
+
 
 //댓글 쿼리 날리는 함수들
-const boardCommentFilteredByPost=async (boardName, postID)=>{
-  const commentFilterQuery="select * from "+boardName+" where post=?";
-  const result=await connection.query(commentFilterQuery, [postID]);
-  console.log(result[0]);
-  return result[0];
+const boardCommentFilteredByPost = async (boardName, postID) => {
+    const commentFilterQuery = "select * from " + boardName + " where post=?";
+    const result = await connection.query(commentFilterQuery, [postID]);
+    console.log(result[0]);
+    return result[0];
 };
 
-const boardCommentUpdate=async (boardName, commentID, newContent)=>{
-  const commentUpdateQuery="update "+boardName+" set content=? where id=?";
-  await connection.query(commentUpdateQuery, [newContent, commentID]);
-  console.log("댓글 수정 완료");
+const boardCommentUpdate = async (boardName, commentID, newContent) => {
+    const commentUpdateQuery = "update " + boardName + " set content=? where id=?";
+    await connection.query(commentUpdateQuery, [newContent, commentID]);
+    console.log("댓글 수정 완료");
 };
 
-const boardCommentInsert=async(boardName, postID, writer, content)=>{
-  const commentInsertQuery="insert into "+boardName+"(post, writer, content, timerecord) values(?,?,?,?)";
-  const currentTime=new Date().toISOString().slice(0, 19).replace("T", " ");
-  await connection.query(commentInsertQuery, [postID, writer, content, currentTime]);
-  console.log("댓글 삽입 완료");
+const boardCommentInsert = async (boardName, postID, writer, content) => {
+    const commentInsertQuery = "insert into " + boardName + "(post, writer, content, timerecord) values(?,?,?,?)";
+    const currentTime = new Date().toISOString().slice(0, 19).replace("T", " ");
+    await connection.query(commentInsertQuery, [postID, writer, content, currentTime]);
+    console.log("댓글 삽입 완료");
 };
 
-export {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate};
+const userInfoInsert = async (username, password) => {
+    const userInsertQuery = "insert into users(username, password) values(?,?)";
+    await connection.query(userInsertQuery, [username, password]);
+};
+
+export {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate, userInfoInsert};
