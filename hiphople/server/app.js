@@ -30,7 +30,7 @@ passportConfig(passport);
 router.post("/", passport.authenticate("local",
     { successRedirect: "/login/success",
     failureRedirect: "/login",
-    failureFlash: "로그인 실패" })
+    failureFlash: true })
 );
 
 

@@ -5,7 +5,13 @@ import bodyParser from "body-parser";
 import mysql from "mysql2/promise";
 import session from "express-session";
 import connection from "./mysql/mysql_connection.js";
-import {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate, userInfoInsert} from "./mysql/board_db.js";
+import {
+    boardCommentFilteredByPost,
+    boardCommentInsert,
+    boardCommentUpdate,
+    userInfoInsert,
+    userInfoFilteredByID
+} from "./mysql/board_db.js";
 import login from "./app.js";
 
 const __dirname=path.resolve();
@@ -50,6 +56,18 @@ app.post("/user-insert", async(req, res)=>{
     }
     catch(err){
         res.send("에러 발생");
+    }
+});
+
+app.post("/user-filter", async (req, res)=>{
+    const {username}=req.body;
+
+    try{
+        const result=await userInfoFilteredByID(username);
+        res.send(result);
+    }
+    catch(err){
+        res.send(err);
     }
 });
 ///////////////////

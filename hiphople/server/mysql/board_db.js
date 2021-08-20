@@ -73,4 +73,10 @@ const userInfoInsert = async (username, password) => {
     await connection.query(userInsertQuery, [username, password]);
 };
 
-export {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate, userInfoInsert};
+const userInfoFilteredByID = async (username) => {
+    const userFilterQuery = "select * from users where username=?";
+    const result = await connection.query(userFilterQuery, [username]);
+    return result[0];
+};
+
+export {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate, userInfoInsert, userInfoFilteredByID};
