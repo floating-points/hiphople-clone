@@ -1,5 +1,5 @@
 import connection from "./mysql_connection.js";
-import conn from "./mysql_connection.js";
+import {pbkdf2Sync} from "crypto";
 
 //DB 생성 코드
 //connection.query("create database board character set utf8");
@@ -41,8 +41,8 @@ app.get("/", (req,res)=>{
 
 /*const userTableQuery="create table users"+
     "(id int not null primary key auto_increment,"+
-    "username nvarchar(20) not null unique,"+
-    "password nvarchar(20) not null);";
+    "username nvarchar(70) not null unique,"+
+    "password nvarchar(70) not null);";
 
 connection.query(userTableQuery);*/
 
@@ -70,7 +70,10 @@ const boardCommentInsert = async (boardName, postID, writer, content) => {
 
 const userInfoInsert = async (username, password) => {
     const userInsertQuery = "insert into users(username, password) values(?,?)";
-    await connection.query(userInsertQuery, [username, password]);
+    const cryptedPassword =
+        pbkdf2Sync(password, "salt", 65536, 32, "sha512").toString("hex");
+    console.log(cryptedPassword);
+    await connection.query(userInsertQuery, [username, cryptedPassword]);
 };
 
 const userInfoFilteredByID = async (username) => {
@@ -79,4 +82,10 @@ const userInfoFilteredByID = async (username) => {
     return result[0];
 };
 
-export {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate, userInfoInsert, userInfoFilteredByID};
+export {
+    boardCommentFilteredByPost,
+    boardCommentInsert,
+    boardCommentUpdate,
+    userInfoInsert,
+    userInfoFilteredByID
+};
