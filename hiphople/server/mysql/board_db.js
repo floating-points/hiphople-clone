@@ -1,5 +1,5 @@
 import connection from "./mysql_connection.js";
-import conn from "./mysql_connection.js";
+import {randomBytes, pbkdf2Sync} from "crypto";
 
 //DB 생성 코드
 //connection.query("create database board character set utf8");
@@ -42,7 +42,7 @@ app.get("/", (req,res)=>{
 /*const userTableQuery="create table users"+
     "(id int not null primary key auto_increment,"+
     "username nvarchar(20) not null unique,"+
-    "password nvarchar(20) not null);";
+    "password nvarchar(200) not null);";
 
 connection.query(userTableQuery);*/
 
@@ -70,8 +70,21 @@ const boardCommentInsert = async (boardName, postID, writer, content) => {
 
 const userInfoInsert = async (username, password) => {
     const userInsertQuery = "insert into users(username, password) values(?,?)";
-    await connection.query(userInsertQuery, [username, password]);
+    const randomSalt=randomBytes(32).toString("hex");
+    const cryptedPassword =
+      pbkdf2Sync(password, randomSalt, 65536, 64, "sha512").toString("hex");
+    const passwordWithSalt=cryptedPassword+"$"+randomSalt;
+    await connection.query(userInsertQuery, [username, passwordWithSalt]);
 };
+
+const userPasswordVerify=async (givenPassword, encryptedPassword)=>{
+    const [encrypted, salt]=encryptedPassword.split("$");
+
+    const givenEncrypted=pbkdf2Sync(givenPassword, salt, 65536, 64, "sha512").toString("hex");
+    console.log(encrypted, salt, givenEncrypted);
+    if(givenEncrypted===encryptedPassword){return 1;}
+    else{return 0;}
+}
 
 const userInfoFilteredByID = async (username) => {
     const userFilterQuery = "select * from users where username=?";
@@ -79,4 +92,11 @@ const userInfoFilteredByID = async (username) => {
     return result[0];
 };
 
-export {boardCommentFilteredByPost, boardCommentInsert, boardCommentUpdate, userInfoInsert, userInfoFilteredByID};
+export {
+  boardCommentFilteredByPost,
+  boardCommentInsert,
+  boardCommentUpdate,
+  userInfoInsert,
+  userPasswordVerify,
+  userInfoFilteredByID
+};
