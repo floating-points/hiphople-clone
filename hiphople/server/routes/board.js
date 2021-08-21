@@ -2,8 +2,8 @@ import express from "express";
 
 const router=express.Router();
 
-router.get("/", (req, res)=>{
-    res.send("국외 게시판");
+router.use("/", (req,res)=>{
+    res.send("test");
 });
 
 export default router;
