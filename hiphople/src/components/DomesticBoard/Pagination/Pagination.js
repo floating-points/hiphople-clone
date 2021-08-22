@@ -25,12 +25,31 @@ const PageItemButton = styled.li`
 	cursor: pointer;
 	width: 40px;
 `
+// 15 1
+// 25 2
+// 5 0
+// 35 3
+// 10 0
+// 11 1
+// 1~10 -> 0
+// 11~20 -> 1
+// 21~20 -> 2
+
 const Pagination = ({currentPage, setCurrentPage}) => {
 	const pages = [];
-	const MAXPAGE = 10;
+	const NUMOFPAGE = 10;
+	const lastPage = 35;
 
-	for (let i= 1; i <= 10; i++)
+	let startPage
+	startPage = (parseInt(currentPage / NUMOFPAGE) % NUMOFPAGE) === 0 ?
+	parseInt(currentPage / NUMOFPAGE) - 1
+	:
+	parseInt(currentPage / NUMOFPAGE)
+
+	//console.log(startPage);
+	for(let i = 1; i <= NUMOFPAGE; i++)
 		pages.push(i);
+
 
 	const onPageClick = useCallback((page) => (
 		setCurrentPage(() => page)
@@ -41,7 +60,7 @@ const Pagination = ({currentPage, setCurrentPage}) => {
 	), []);
 
 	const onNextClick = useCallback((page) => (
-		page < MAXPAGE ? setCurrentPage(() => page + 1) : ""
+		page < lastPage ? setCurrentPage(() => page + 1) : ""
 	), []);
 
 	return (
