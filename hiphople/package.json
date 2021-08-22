@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "hiphople",
   "version": "0.1.0",
@@ -40,3 +41,16 @@
     ]
   }
 }
+=======
+{
+  "name": "hiphople",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ]
+}
+>>>>>>> 2c9262e46b3333b2f683867db19c2ce606f08ded
