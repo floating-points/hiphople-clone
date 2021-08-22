@@ -1,0 +1,11 @@
+.sns {
+	display : flex;
+	margin-left: 1rem;
+
+	A:link {text-decoration: none; color:black;}
+	A:visited {text-decoration: none; color:black;}
+	A:active {text-decoration: none; color:black;}
+	.icon {
+		margin-right: 1rem;
+	}
+}
