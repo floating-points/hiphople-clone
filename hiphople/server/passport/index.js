@@ -11,7 +11,7 @@ const passportConfig = (passport) => {
 
                 if (result.length > 0) {
                     const user = result[0];
-                    if (await userPasswordVerify(password, user.password)) {
+                    if (await userPasswordVerify(password, user.password)===1) {
                         return done(null, user);
                     } else {
                         return done(null, false, {message: "틀린 비밀번호입니다"});
