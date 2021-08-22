@@ -1,0 +1,22 @@
+
+.gnb {
+	display: flex;
+	justify-content: center;
+	margin-top: 1rem;
+
+	//margin: 0 auto;
+	.gnb_menu {
+
+		cursor: pointer;
+		white-space: pre;
+		text-decoration: none;
+		font-size: 1rem;
+		margin-right: 2rem;
+		color: #808080;
+
+		&:hover {
+			color : red;
+		}
+	}
+}
+
