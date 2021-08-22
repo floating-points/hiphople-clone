@@ -26,7 +26,8 @@ const TableBody = styled.tbody`
 
 `
 
-const posts = [
+
+const postsa = [
 	{
 		id: 1,
 		type: "general",
@@ -69,9 +70,18 @@ const posts = [
 		date : "123"
 	},
 ]
-
-const RenderBoard = ({ post, currentType}) => {
+const RenderBoard = ({ posts, currentPage, currentType}) => {
 	const ALL = "all";
+	const MAXPAGE = posts.length;
+	const POSTSPERPAGE = 20;
+
+	{/* 현재 페이지의 20개만 렌더링 되도록 자름 */}
+	const indexOfStart = MAXPAGE - (currentPage * POSTSPERPAGE);
+	const indexOfEnd = MAXPAGE - (currentPage - 1) * POSTSPERPAGE;
+	if (indexOfStart < 0)
+		posts = posts.slice(0, indexOfEnd).reverse();
+	else
+		posts = posts.slice(indexOfStart, indexOfEnd).reverse();
 
 	return (
 		<TableContainer>
@@ -87,7 +97,7 @@ const RenderBoard = ({ post, currentType}) => {
 		{/* 게시글 내용 */}
 		<TableBody>
 			{
-				posts && posts.map((post) => (
+				posts.map((post) => (
 					currentType === ALL ?
 					<BoardItem
 					post={post} />

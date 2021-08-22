@@ -1,5 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import BoardGnb from "./BoardGnb/BoardGnb";
 import BoardCategory from "./BoardCategory/BoardCategory";
 import PostSearch from "./PostSearch/PostSearch";
@@ -21,61 +22,41 @@ const Title = styled.div`
 	font-weight: bold;
 `
 
-const TableBody = styled.tbody`
-
-`
-
-const posts = [
-	{
-		id: 1,
-		type: "general",
-		title: "일반 타입 게시글 입니다",
-		author: "ho",
-		date : "123"
-	},
-	{
-		id: 2,
-		type: "music",
-		title: "음악 타입 게시글 입니다",
-		author: "ho",
-		date : "123"
-	},{
-		id: 3,
-		type: "review",
-		title: "리뷰 타입 게시글 입니다",
-		author: "ho",
-		date : "123"
-	},
-	{
-		id: 4,
-		type: "notice",
-		title: "공지 타입 게시글 입니다",
-		author: "ho",
-		date : "123"
-	},
-	{
-		id: 5,
-		type: "all",
-		title: "전체 타입 게시글 입니다",
-		author: "ho",
-		date : "123"
-	},
-	{
-		id: 6,
-		type: "general",
-		title: "일반 타입 게시글 입니다",
-		author: "ho",
-		date : "123"
-	},
-]
 
 
 const DomesticBoard = () => {
 	const TITLE = "국내 게시판";
-	const ALL = "all";
+	const [posts, setPosts] = useState([]);
 	const [currentType, setCurrentType] = useState("all");
 	const [currentPage, setCurrentPage] = useState(1);
 
+	{/* 게시글을 불러온다 */}
+	useEffect( () => {
+		const fetchData = async () => {
+			const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
+
+			{/*불러온 데이터에 임의로 type, date객체 추가 */}
+			for(let i = 0; i < response.data.length; i++){
+				if (i % 5 === 0)
+					response.data[i].type = "all"
+				else if (i % 5 === 1)
+					response.data[i].type = "general"
+				else if (i % 5 === 2)
+					response.data[i].type = "review"
+				else if (i % 5 === 3)
+					response.data[i].type = "notice"
+				else if (i % 5 === 4)
+					response.data[i].type = "music"
+				response.data[i].date = i;
+				response.data[i].author = "ho";
+			}
+			for(let i = 101; i< 132; i++)
+					response.data.push({...response.data[i - 100], id:i});
+			setPosts(response.data);
+		}
+
+		fetchData();
+	}, []);
 	const onCategoryClick = useCallback(((type) => {
 		setCurrentType(() => type);
 	}), [currentType]);
@@ -100,10 +81,13 @@ const DomesticBoard = () => {
 				/>
 
 				<RenderBoard
-					post={posts}
+					posts={posts}
+					currentPage={currentPage}
 					currentType={currentType}
 				/>
+
 				<PostSearch />
+
 				<Pagination
 					currentPage={currentPage}
 					setCurrentPage={setCurrentPage}

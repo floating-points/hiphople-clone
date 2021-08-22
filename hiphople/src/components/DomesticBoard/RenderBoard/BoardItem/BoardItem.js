@@ -8,11 +8,6 @@ const TablePost = styled.tr`
 
 
 const BoardItem = ({
-	//id,
-	//type,
-	//title,
-	//author,
-	//date,
 	post
 }) => {
 	const {

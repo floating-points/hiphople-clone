@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Link } from "react-router-dom";
 import styled from "styled-components";
-import Login from "../Mainpage/Header/Login";
 
 const GnbContainer = styled.div`
 	position: fixed;
@@ -82,7 +81,6 @@ const BoardGnb = () => {
 					{menu.text}
 				</GnbMenu>
 			))}
-
 
 			</Gnb>
 		</GnbContainer>
