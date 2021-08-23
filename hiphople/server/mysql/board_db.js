@@ -48,6 +48,7 @@ connection.query(insertQuery, (err, result, fields)=>{
 
 //게시글 쿼리 날리는 함수들
 const boardPostInsert=async (boardName, type, title, username, content)=>{
+    //새로운 글 추가하는 함수
     const postInsertQuery="insert into "+boardName+
         "(type, title, timerecord, author, content) values(?,?,?,?,?);";
     const currentTime = new Date().toISOString().slice(0, 19).replace("T", " ");
@@ -55,6 +56,7 @@ const boardPostInsert=async (boardName, type, title, username, content)=>{
 };
 
 const boardPostAll=async(boardName)=>{
+    //모든 글을 불러오는 쿼리를 날리고 그 결과를 배열로 리턴해 주는 함수
     const postAllSelectQuery="select * from "+boardName+";";
     const result=await connection.query(postAllSelectQuery);
     console.log(result[0]);
@@ -62,6 +64,7 @@ const boardPostAll=async(boardName)=>{
 };
 
 const boardPostFilteredByAuthor=async (boardName, author)=>{
+    //글쓴이 유저네임으로 필터링된 글들을 배열로 리턴해 주는 함수
     const postFilterQuery="select * from "+boardName+" where author=?";
     const result=await connection.query(postFilterQuery, [author]);
     console.log(result[0]);
