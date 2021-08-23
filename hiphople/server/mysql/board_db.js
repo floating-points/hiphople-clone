@@ -6,8 +6,7 @@ import {randomBytes, pbkdf2Sync} from "crypto";
 
 //유저 테이블 생성 코드
 /*const userTableQuery="create table users"+
-    "(id int not null primary key auto_increment,"+
-    "username varchar(20) not null unique,"+
+    "(username varchar(20) primary key,"+
     "password varchar(200) not null);";
 
 connection.query(userTableQuery);*/
@@ -16,10 +15,11 @@ connection.query(userTableQuery);*/
 /*const postsTableQuery = "create table domestic_posts" +
     "(id int not null primary key auto_increment," +
     "title varchar(100)," +
+    "type int,"+
     "content text(5000)," +
     "timerecord datetime not null," +
-    "author int,"+
-    "foreign key (author) references users(id)" +
+    "author varchar(20),"+
+    "foreign key (author) references users(username)" +
     ");";
 
 connection.query(postsTableQuery);*/
@@ -27,11 +27,11 @@ connection.query(postsTableQuery);*/
 //댓글 db 생성 코드
 /*const commentsTableQuery="create table domestic_comments" +
     "(id int not null primary key auto_increment," +
-    "post_id int not null," +
+    "post_id int," +
     "content text(1000)," +
-    "author int not null," +
+    "author varchar(20)," +
     "timerecord datetime not null," +
-    "foreign key(author) references users(id)," +
+    "foreign key(author) references users(username)," +
     "foreign key(post_id) references domestic_posts(id));";
 
 connection.query(commentsTableQuery);*/
@@ -45,6 +45,28 @@ connection.query(insertQuery, (err, result, fields)=>{
 });
 
 */
+
+//게시글 쿼리 날리는 함수들
+const boardPostInsert=async (boardName, type, title, username, content)=>{
+    const postInsertQuery="insert into "+boardName+
+        "(type, title, timerecord, author, content) values(?,?,?,?,?);";
+    const currentTime = new Date().toISOString().slice(0, 19).replace("T", " ");
+    await connection.query(postInsertQuery, [type, title, currentTime, username, content]);
+};
+
+const boardPostAll=async(boardName)=>{
+    const postAllSelectQuery="select * from "+boardName+";";
+    const result=await connection.query(postAllSelectQuery);
+    console.log(result[0]);
+    return result[0];
+};
+
+const boardPostFilteredByAuthor=async (boardName, author)=>{
+    const postFilterQuery="select * from "+boardName+" where author=?";
+    const result=await connection.query(postFilterQuery, [author]);
+    console.log(result[0]);
+    return result[0];
+};
 
 
 //댓글 쿼리 날리는 함수들
@@ -94,6 +116,9 @@ const userInfoFilteredByID = async (username) => {
 };
 
 export {
+    boardPostInsert,
+    boardPostAll,
+    boardPostFilteredByAuthor,
     boardCommentFilteredByPost,
     boardCommentInsert,
     boardCommentUpdate,

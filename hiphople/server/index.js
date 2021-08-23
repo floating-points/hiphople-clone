@@ -6,6 +6,9 @@ import mysql from "mysql2/promise";
 import session from "express-session";
 import connection from "./mysql/mysql_connection.js";
 import {
+    boardPostInsert,
+    boardPostAll,
+    boardPostFilteredByAuthor,
     boardCommentFilteredByPost,
     boardCommentInsert,
     boardCommentUpdate,
@@ -31,6 +34,39 @@ app.use("/login", login);
 //app.use("/", express.static(__dirname+"/client/build"));
 
 //postman 으로 쿼리 날리기 시험용 페이지들
+app.post("/post-insert", async(req, res)=>{
+    const {boardName, type, title, username, content}=req.body;
+    try{
+        await boardPostInsert(boardName, type, title, username, content);
+        res.send("새로운 글 삽입 성공");
+    }
+    catch (err){
+        res.send(err);
+    }
+});
+
+app.post("/post-all", async(req, res)=>{
+    const {boardName}=req.body;
+    try{
+        const result=await boardPostAll(boardName);
+        res.send(result);
+    }
+    catch (err){
+        res.send(err);
+    }
+});
+
+app.post("/post-search", async(req, res)=>{
+    const {boardName, author}=req.body;
+    try{
+        const result=await boardPostFilteredByAuthor(boardName, author);
+        res.send(result);
+    }
+    catch (err){
+        res.send(err);
+    }
+});
+
 app.post("/comment-search", async (req,res)=>{
     const {boardName, postID}=req.body;
     res.send(await boardCommentFilteredByPost(boardName, postID));
@@ -55,13 +91,12 @@ app.post("/user-insert", async(req, res)=>{
         res.send("유저 정보 삽입 성공");
     }
     catch(err){
-        res.send("에러 발생");
+        res.send(err);
     }
 });
 
 app.post("/user-filter", async (req, res)=>{
     const {username}=req.body;
-
     try{
         const result=await userInfoFilteredByID(username);
         res.send(result);
