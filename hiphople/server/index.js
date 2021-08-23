@@ -17,101 +17,96 @@ import {
 } from "./mysql/board_db.js";
 import login from "./app.js";
 
-const __dirname=path.resolve();
-const PORT=8000;
+const __dirname = path.resolve();
+const PORT = 8000;
 
-const app=express();
-app.use(bodyParser.urlencoded({extended:true}));
+const app = express();
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(session({
-    secret:"secret",
-    resave:false,
-    saveUninitialized:true
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true
 }));
 
-app.use("/api",api);
+app.use("/api", api);
 app.use("/login", login);
 //app.use("/", express.static(__dirname+"/client/build"));
 
 //postman 으로 쿼리 날리기 시험용 페이지들
-app.post("/post-insert", async(req, res)=>{
-    const {boardName, type, title, username, content}=req.body;
-    try{
+app.post("/post-insert", async (req, res) => {
+    const {boardName, type, title, username, content} = req.body;
+    try {
         await boardPostInsert(boardName, type, title, username, content);
         res.send("새로운 글 삽입 성공");
-    }
-    catch (err){
+    } catch (err) {
         res.send(err);
     }
 });
 
-app.post("/post-all", async(req, res)=>{
-    const {boardName}=req.body;
-    try{
-        const result=await boardPostAll(boardName);
+app.post("/post-all", async (req, res) => {
+    const {boardName} = req.body;
+    try {
+        const result = await boardPostAll(boardName);
         res.send(result);
-    }
-    catch (err){
+    } catch (err) {
         res.send(err);
     }
 });
 
-app.post("/post-search", async(req, res)=>{
-    const {boardName, author}=req.body;
-    try{
-        const result=await boardPostFilteredByAuthor(boardName, author);
+app.post("/post-search", async (req, res) => {
+    const {boardName, author} = req.body;
+    try {
+        const result = await boardPostFilteredByAuthor(boardName, author);
         res.send(result);
-    }
-    catch (err){
+    } catch (err) {
         res.send(err);
     }
 });
 
-app.post("/comment-search", async (req,res)=>{
-    const {boardName, postID}=req.body;
+app.post("/comment-search", async (req, res) => {
+    const {boardName, postID} = req.body;
     res.send(await boardCommentFilteredByPost(boardName, postID));
 });
 
-app.post("/comment-update", async (req,res)=>{
-    const {boardName, commentID, newContent}=req.body;
+app.post("/comment-update", async (req, res) => {
+    const {boardName, commentID, newContent} = req.body;
     res.send(await boardCommentUpdate(boardName, commentID, newContent));
 });
 
-app.post("/comment-insert", async (req,res)=>{
-    const {boardName, postID, writer, content}=req.body;
+app.post("/comment-insert", async (req, res) => {
+    const {boardName, postID, writer, content} = req.body;
     //datetime for mysql
     res.send(await boardCommentInsert(boardName, postID, writer, content));
 });
 
-app.post("/user-insert", async(req, res)=>{
-    const {username, password}=req.body;
+app.post("/user-insert", async (req, res) => {
+    const {username, password} = req.body;
     //console.log(username, password);
-    try{
-        const result=await userInfoInsert(username, password);
+    try {
+        const result = await userInfoInsert(username, password);
         res.send("유저 정보 삽입 성공");
-    }
-    catch(err){
+    } catch (err) {
         res.send(err);
     }
 });
 
-app.post("/user-filter", async (req, res)=>{
-    const {username}=req.body;
-    try{
-        const result=await userInfoFilteredByID(username);
+app.post("/user-filter", async (req, res) => {
+    const {username} = req.body;
+    try {
+        const result = await userInfoFilteredByID(username);
         res.send(result);
-    }
-    catch(err){
+    } catch (err) {
         res.send(err);
     }
 });
 ///////////////////
 
-app.get("/", async (req, res)=>{
-   res.send("시작 페이지");
+app.get("/", async (req, res) => {
+    res.send("시작 페이지");
 });
 
-app.listen(PORT, ()=>{
+app.listen(PORT, () => {
     console.log("example app running on port", PORT);
     console.log(__dirname);
 });
