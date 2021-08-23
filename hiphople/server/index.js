@@ -49,7 +49,7 @@ app.post("/comment-insert", async (req,res)=>{
 
 app.post("/user-insert", async(req, res)=>{
     const {username, password}=req.body;
-
+    //console.log(username, password);
     try{
         const result=await userInfoInsert(username, password);
         res.send("유저 정보 삽입 성공");

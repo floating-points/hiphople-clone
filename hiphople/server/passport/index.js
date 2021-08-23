@@ -1,5 +1,5 @@
 import passportLocal from "passport-local";
-import {userInfoFilteredByID} from "../mysql/board_db.js";
+import {userInfoFilteredByID, userPasswordVerify} from "../mysql/board_db.js";
 
 const LocalStrategy = passportLocal.Strategy;
 
@@ -11,7 +11,7 @@ const passportConfig = (passport) => {
 
                 if (result.length > 0) {
                     const user = result[0];
-                    if (user.password === password) {
+                    if (await userPasswordVerify(password, user.password)===1) {
                         return done(null, user);
                     } else {
                         return done(null, false, {message: "틀린 비밀번호입니다"});
