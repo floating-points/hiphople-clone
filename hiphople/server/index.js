@@ -5,6 +5,10 @@ import bodyParser from "body-parser";
 import mysql from "mysql2/promise";
 import session from "express-session";
 import connection from "./mysql/mysql_connection.js";
+import passport from "passport";
+import passportConfig from "./passport/index.js";
+import dotenv from "dotenv";
+import flash from "connect-flash";
 import {
     boardPostInsert,
     boardPostAll,
@@ -15,31 +19,44 @@ import {
     userInfoInsert,
     userInfoFilteredByID
 } from "./mysql/board_db.js";
-import login from "./app.js";
+import login from "./routes/login.js";
+import cors from "cors";
 
 const __dirname = path.resolve();
 const PORT = 8000;
 
 const app = express();
-app.use(bodyParser.urlencoded({extended: true}));
+
+app.use(cors());
+dotenv.config();
 
 app.use(session({
-    secret: "secret",
-    resave: false,
-    saveUninitialized: true
+    resave:false,
+    saveUninitialized:false,
+    secret:process.env.SESSION_SECRET
 }));
 
+app.use(express.urlencoded({extended:false}));
+app.use(express.json());
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+passportConfig(passport);
+
 app.use("/api", api);
-app.use("/login", login);
+//app.use("/login", login);
 //app.use("/", express.static(__dirname+"/client/build"));
 
+
 //postman 으로 쿼리 날리기 시험용 페이지들
-app.post("/post-insert", async (req, res) => {
-    const {boardName, type, title, username, content} = req.body;
-    try {
+app.post("/post-insert", async(req, res)=>{
+    const {boardName, type, title, username, content}=req.body;
+    try{
         await boardPostInsert(boardName, type, title, username, content);
         res.send("새로운 글 삽입 성공");
-    } catch (err) {
+    }
+    catch (err){
         res.send(err);
     }
 });
@@ -82,7 +99,8 @@ app.post("/comment-insert", async (req, res) => {
 
 app.post("/user-insert", async (req, res) => {
     const {username, password} = req.body;
-    //console.log(username, password);
+    console.log("test");
+    console.log(username, password);
     try {
         const result = await userInfoInsert(username, password);
         res.send("유저 정보 삽입 성공");
@@ -100,7 +118,6 @@ app.post("/user-filter", async (req, res) => {
         res.send(err);
     }
 });
-///////////////////
 
 app.get("/", async (req, res) => {
     res.send("시작 페이지");
