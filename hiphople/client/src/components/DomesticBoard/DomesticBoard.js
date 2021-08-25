@@ -22,8 +22,6 @@ const Title = styled.div`
 	font-weight: bold;
 `
 
-
-
 const DomesticBoard = () => {
 	const TITLE = "국내 게시판";
 	const [posts, setPosts] = useState([]);
@@ -33,34 +31,31 @@ const DomesticBoard = () => {
 	{/* 게시글을 불러온다 */}
 	useEffect( () => {
 		const fetchData = async () => {
-			const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
+			const posts = await axios.post("http://localhost:8000/post-all", {
+				boardName: "domestic_posts"
+			});
 
-			{/*불러온 데이터에 임의로 type, date객체 추가 */}
-			for(let i = 0; i < response.data.length; i++){
-				if (i % 5 === 0)
-					response.data[i].type = "all"
-				else if (i % 5 === 1)
-					response.data[i].type = "general"
-				else if (i % 5 === 2)
-					response.data[i].type = "review"
-				else if (i % 5 === 3)
-					response.data[i].type = "notice"
-				else if (i % 5 === 4)
-					response.data[i].type = "music"
-				response.data[i].date = i;
-				response.data[i].author = "ho";
+			{/*불러온 데이터에 type 객체 변경*/}
+			for(let i = 0; i < posts.data.length; i++){
+				if (posts.data[i].type === 1)
+					posts.data[i].type = "all"
+				else if (posts.data[i].type === 2)
+					posts.data[i].type = "general"
+				else if (posts.data[i].type === 3)
+					posts.data[i].type = "review"
+				else if (posts.data[i].type === 4)
+					posts.data[i].type = "notice"
+				else if (posts.data[i].type === 5)
+					posts.data[i].type = "music"
 			}
-			for(let i = 101; i< 132; i++)
-					response.data.push({...response.data[i - 100], id:i});
-			setPosts(response.data);
+			setPosts(posts.data);
 		}
-
 		fetchData();
 	}, []);
+
 	const onCategoryClick = useCallback(((type) => {
 		setCurrentType(() => type);
-	}), [currentType]);
-
+	}), [setCurrentType]);
 
 	return (
 		<DomesticBoardContainer>
@@ -86,7 +81,7 @@ const DomesticBoard = () => {
 					currentType={currentType}
 				/>
 
-				<PostSearch />
+				<PostSearch setPosts={setPosts} />
 
 				<Pagination
 					currentPage={currentPage}

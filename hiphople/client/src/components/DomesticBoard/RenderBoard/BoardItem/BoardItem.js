@@ -15,15 +15,17 @@ const BoardItem = ({
 		type,
 		title,
 		author,
-		date
+		timerecord
 	} = post;
+
+	const time = timerecord.slice(0,10);
 	return (
 		<TablePost>
 			<td>{id}</td>
 			<td>{type}</td>
 			<td>{title}</td>
 			<td>{author}</td>
-			<td>{date}</td>
+			<td>{time}</td>
 		</TablePost>
 	)
 }
