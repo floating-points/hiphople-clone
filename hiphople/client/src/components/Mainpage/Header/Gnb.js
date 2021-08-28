@@ -40,12 +40,6 @@ const menus = [
 const Gnb = () => {
 	return (
 		<div className="gnb">
-			<Route path="/DomesticBoard" component={DomesticBoard} />
-			<Route path="boardName" />
-			<Route path="boardName" />
-			<Route path="boardName" />
-			<Route path="boardName" />
-			<Route path="boardName" />
 
 			{/* menu.boardName = /DomesticBoard */}
 			{menus.map((menu) => (
