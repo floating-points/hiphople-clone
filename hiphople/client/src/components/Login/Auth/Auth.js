@@ -1,21 +1,51 @@
 import React, { useState } from "react"
+import { useHistory } from "react-router-dom";
 import "./auth.scss"
 
 const Auth = () => {
-    const [inputData, setInputData] = useState({
+    // global 전역 상태값 setUser를 받아옴
+    const history = useHistory();
+
+    const [account, setAccount] = useState({
         id: "",
         password: ""
     })
 
-    const LoginButtonClick = () => {
-        const { id, password } = inputData;
-        if (!id || !password) {
-            return alert("로그인 정보를 입력해주세요.")
+    const fetchLogin = async ({ id, password }) => {
+        const response = await fetch("http://localhost:8000/login");
+
+        if (response.ok) {
+            const users = await response.json();
+
+            const user = users.find(user => user.id === id);
+            if (!user || user.password !== password) {
+                throw new Error("아이디 또는 비밀번호가 일치하지 않습니다.")
+            }
+            return user;
         }
-        setInputData({
-            id: "",
-            password: ""
+        throw new Error("서버 통신이 원할하지 않습니다.")
+    }
+
+    const onChangeAccount = (e) => {
+        // console.log(account)
+        setAccount({
+            ...account,
+            [e.target.name]: e.target.value
         })
+    }
+
+    // No!!!
+
+    const onSubmitAccount = async () => {
+        try {
+            const user = await fetchLogin(account);
+
+            // 성공하면 메인페이지로
+            history.replace("/")
+        } catch (error) {
+            // 실패하면 throw new Error("") 값 출력
+            window.alert(error);
+        }
     }
 
     return (
@@ -24,11 +54,11 @@ const Auth = () => {
                 로그인
             </div>
             <div className="id-password-container">
-                <input name="id" placeholder="아이디" type="text"  />
-                <input name="password" placeholder="비밀번호" type="password"  />
+                <input name="id" placeholder="아이디" type="text" onChange={onChangeAccount} />
+                <input name="password" placeholder="비밀번호" type="password" onChange={onChangeAccount} />
             </div>
             <div className="login-button">
-                <button onClick={LoginButtonClick} >로그인</button>
+                <button onClick={onSubmitAccount}>로그인</button>
             </div>
             <div className="auth-small-container">
                 <button>회원가입</button>
